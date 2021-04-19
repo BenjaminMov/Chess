@@ -162,6 +162,7 @@ public class GamePanel extends JPanel {
 
         if (myPiece != null) {
             dragging = myPiece;
+            dragging.scan();
             repaint();
         }
     }
@@ -173,9 +174,11 @@ public class GamePanel extends JPanel {
 
     private void handleMouseReleased(MouseEvent me) {
         Integer position = (translateY(me.getY()) * BOARD_SIZE) + translateX(me.getX());
-        if (dragging != null && dragging.moveIsValid(position)) {
-            dragging.setPosition(position);
-            board.update(dragging);
+        if (dragging != null) {
+            dragging.clearBlocked();
+            if (dragging.moveIsValid(position))
+                dragging.setPosition(position);
+                board.update(dragging);
         }
         dragging = null;
     }

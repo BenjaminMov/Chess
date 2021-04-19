@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static main.Board.BOARD_SIZE;
 
 public abstract class Piece {
@@ -8,6 +11,8 @@ public abstract class Piece {
     protected Board board;
     protected String type;
     protected boolean black;
+
+    protected List<Integer> piecesInPath;
 
     protected Integer yPos;
     protected Integer xPos;
@@ -20,6 +25,8 @@ public abstract class Piece {
 
         xPos = position % BOARD_SIZE;
         yPos = position / BOARD_SIZE;
+
+        piecesInPath = new ArrayList<>();
     }
 
     protected void move(Integer position) {
@@ -29,6 +36,10 @@ public abstract class Piece {
     }
 
     public abstract boolean moveIsValid(Integer position);
+
+    public void scan() {
+
+    }
 
     public Integer getPosition() {
         return position;
@@ -52,5 +63,9 @@ public abstract class Piece {
 
     public void setyPos(Integer yPos) {
         this.yPos = yPos;
+    }
+
+    public void clearBlocked() {
+        piecesInPath.clear();
     }
 }

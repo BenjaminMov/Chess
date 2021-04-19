@@ -19,18 +19,20 @@ public class Knight extends Piece {
 
     @Override
     public boolean moveIsValid(Integer position) {
-        boolean valid = false;
 
         int xPos = (position % BOARD_SIZE);
         int yPos = (position / BOARD_SIZE);
 
-        if (abs(this.yPos - yPos) == 2) {
-            valid = abs(this.xPos - xPos) == 1;
-        } else if (abs(this.xPos - xPos) == 2) {
-            valid = abs(this.yPos - yPos) == 1;
+        if (board.existPieceAt(position) && (board.getPieceAt(position).isBlack() == black)) {
+            return false;
         }
 
-
-        return valid;
+        if (abs(this.yPos - yPos) == 2) {
+            return abs(this.xPos - xPos) == 1;
+        } else if (abs(this.xPos - xPos) == 2) {
+            return abs(this.yPos - yPos) == 1;
+        } else {
+            return false;
+        }
     }
 }

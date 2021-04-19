@@ -26,6 +26,7 @@ public class Board implements Iterable<Piece> {
             }
             p.setxPos(p.getPosition() % BOARD_SIZE);
             p.setyPos(p.getPosition() / BOARD_SIZE);
+            p.clearBlocked();
         }
 
         if (capturedPiece != null) {
