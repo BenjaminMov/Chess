@@ -19,6 +19,9 @@ public class GamePanel extends JPanel {
     private static final Color WHITE_TILE_COLOUR = new Color(255,245,196);
     private static final Color BLACK_TILE_COLOUR = new Color(101, 67, 33);
 
+    private static final Integer CIRCLE_SHADOW_DIAMETER = 40;
+    private static final Integer CIRCLE_SHADOW_OPACITY = 100;
+
     private Board board;
     private Piece dragging;
 
@@ -46,11 +49,26 @@ public class GamePanel extends JPanel {
 
         makeColours(g);
 
-        for (Piece p : board.getPieces()) {
+        for (Piece p : board) {
             drawPiece(g, p);
         }
 
+        if (dragging != null) {
+            drawValidMoves(g);
+        }
+
         repaint();
+    }
+
+    private void drawValidMoves(Graphics g) {
+        for (int pos = 0; pos < BOARD_SIZE * BOARD_SIZE; pos++) {
+            if (dragging.moveIsValid(pos)) {
+                int xPos = (pos % BOARD_SIZE) * CELL_SIZE + (CELL_SIZE - CIRCLE_SHADOW_DIAMETER) / 2;
+                int yPos = (pos / BOARD_SIZE) * CELL_SIZE + (CELL_SIZE - CIRCLE_SHADOW_DIAMETER) / 2;
+                g.setColor(new Color(0,0,0, CIRCLE_SHADOW_OPACITY));
+                g.fillOval(xPos, yPos, CIRCLE_SHADOW_DIAMETER, CIRCLE_SHADOW_DIAMETER);
+            }
+        }
     }
 
     private void drawPiece(Graphics g, Piece p) {
@@ -155,7 +173,7 @@ public class GamePanel extends JPanel {
 
     private void handleMouseReleased(MouseEvent me) {
         Integer position = (translateY(me.getY()) * BOARD_SIZE) + translateX(me.getX());
-        if (dragging.validMove(position)) {
+        if (dragging != null && dragging.moveIsValid(position)) {
             dragging.setPosition(position);
             board.update(dragging);
         }

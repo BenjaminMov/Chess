@@ -3,8 +3,6 @@ package main.Pieces;
 import main.Board;
 import main.Piece;
 
-import java.awt.*;
-
 public class Pawn extends Piece {
 
     public Pawn(Integer position, Board board, Boolean black) {
@@ -12,21 +10,29 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean validMove(Integer position) {
-        if (black) {
-            return  ((board.existPieceAt(position) && getImmediateDiag(position))
-                    || position.equals(this.position - Board.BOARD_SIZE) && noPieceAt(this.position - Board.BOARD_SIZE));
-        } else {
-            return ((board.existPieceAt(position) && getImmediateDiag(position))
-                    || position.equals(this.position + Board.BOARD_SIZE) && noPieceAt(this.position + Board.BOARD_SIZE));
-        }
+    public boolean moveIsValid(Integer position) {
+        return  (canCapture(position) || canMoveForward(position));
+    }
+
+    private boolean canMoveForward(Integer position) {
+        boolean blackForward = black
+                && position.equals(this.position - Board.BOARD_SIZE) && noPieceAt(this.position - Board.BOARD_SIZE);
+        boolean whiteForward = !black
+                && position.equals(this.position + Board.BOARD_SIZE) && noPieceAt(this.position + Board.BOARD_SIZE);
+        return blackForward || whiteForward;
+    }
+
+    private boolean canCapture(Integer position) {
+       return (board.existPieceAt(position)
+               && isImmediateDiag(position)
+               && (board.getPieceAt(position)).isBlack() != black);
     }
 
     private boolean noPieceAt(int position) {
         return board.getPieceAt(position) == null;
     }
 
-    private boolean getImmediateDiag(Integer position) {
+    private boolean isImmediateDiag(Integer position) {
         if (black) {
             return position.equals(this.position - Board.BOARD_SIZE + 1)
                     || position.equals(this.position - Board.BOARD_SIZE - 1);

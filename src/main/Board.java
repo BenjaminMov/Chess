@@ -3,9 +3,10 @@ package main;
 import main.Pieces.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Board {
+public class Board implements Iterable<Piece> {
 
     private List<Piece> pieces;
 
@@ -23,6 +24,8 @@ public class Board {
             if (p != movedPiece && p.getPosition().equals(movedPiece.getPosition())) {
                 capturedPiece = p;
             }
+            p.setxPos(p.getPosition() % BOARD_SIZE);
+            p.setyPos(p.getPosition() / BOARD_SIZE);
         }
 
         if (capturedPiece != null) {
@@ -84,7 +87,8 @@ public class Board {
         return piece;
     }
 
-    public List<Piece> getPieces() {
-        return pieces;
+    @Override
+    public Iterator<Piece> iterator() {
+        return pieces.iterator();
     }
 }

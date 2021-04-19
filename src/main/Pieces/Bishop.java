@@ -19,7 +19,7 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public boolean validMove(Integer position) {
+    public boolean moveIsValid(Integer position) {
         boolean valid = false;
 
         Integer xPos = position % BOARD_SIZE;

@@ -12,7 +12,7 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean validMove(Integer position) {
+    public boolean moveIsValid(Integer position) {
         return false;
     }
 }

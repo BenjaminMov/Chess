@@ -1,7 +1,5 @@
 package main;
 
-import java.awt.*;
-
 import static main.Board.BOARD_SIZE;
 
 public abstract class Piece {
@@ -25,12 +23,12 @@ public abstract class Piece {
     }
 
     protected void move(Integer position) {
-        if (validMove(position)) {
+        if (moveIsValid(position)) {
             this.position = position;
         }
     }
 
-    public abstract boolean validMove(Integer position);
+    public abstract boolean moveIsValid(Integer position);
 
     public Integer getPosition() {
         return position;
@@ -44,23 +42,15 @@ public abstract class Piece {
         return type;
     }
 
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public void setxPos(Integer xPos) {
         this.xPos = xPos;
     }
 
     public void setyPos(Integer yPos) {
         this.yPos = yPos;
-    }
-
-    public Integer getxPos() {
-        return xPos;
-    }
-
-    public Integer getyPos() {
-        return yPos;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
     }
 }

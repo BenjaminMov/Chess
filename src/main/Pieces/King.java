@@ -4,6 +4,7 @@ import main.Board;
 import main.Piece;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class King extends Piece {
 
@@ -13,7 +14,7 @@ public class King extends Piece {
     }
 
     @Override
-    public boolean validMove(Integer position) {
+    public boolean moveIsValid(Integer position) {
         return false;
     }
 }
