@@ -40,7 +40,7 @@ public class Bishop extends Piece {
 
         ArrayList<Integer> blocked = new ArrayList<>();
 
-        if (piecesInPath.contains(position) && board.getPieceAt(position).isBlack() == black) {
+        if (board.existPieceAt(position) && board.getPieceAt(position).isBlack() == black) {
             return false;
         }
 

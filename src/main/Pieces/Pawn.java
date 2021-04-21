@@ -35,10 +35,12 @@ public class Pawn extends Piece {
     private boolean isImmediateDiag(Integer position) {
         if (black) {
             return position.equals(this.position - Board.BOARD_SIZE + 1)
-                    || position.equals(this.position - Board.BOARD_SIZE - 1);
+                    || position.equals(this.position - Board.BOARD_SIZE - 1)
+                    && (position / Board.BOARD_SIZE == this.yPos - 1);
         } else {
             return position.equals(this.position + Board.BOARD_SIZE + 1)
-                    || position.equals(this.position + Board.BOARD_SIZE - 1);
+                    || position.equals(this.position + Board.BOARD_SIZE - 1)
+                    && (position / Board.BOARD_SIZE == this.yPos + 1);
         }
     }
 }
