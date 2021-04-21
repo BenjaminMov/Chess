@@ -56,12 +56,12 @@ public class Rook extends Piece {
             int yPos = (p / BOARD_SIZE);
 
             if (xPos > this.xPos) {
-                for (int i = p + 1; i < p + 1 + BOARD_SIZE - xPos; i++) {
-                    blocked.add(i);
+                for (int i = 0; i < BOARD_SIZE - xPos; i++) {
+                    blocked.add(p + i + 1);
                 }
             } else if (xPos < this.xPos) {
-                for (int i = p - 1; i > p - 1 - xPos; i--) {
-                    blocked.add(i);
+                for (int i = 0; i < xPos; i++) {
+                    blocked.add(p - i - 1);
                 }
             } else if (yPos > this.yPos) {
                 for (int i = 1; i < BOARD_SIZE - yPos; i++) {

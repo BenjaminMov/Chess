@@ -175,7 +175,9 @@ public class GamePanel extends JPanel {
     private void handleMouseReleased(MouseEvent me) {
         Integer position = (translateY(me.getY()) * BOARD_SIZE) + translateX(me.getX());
         if (dragging != null) {
-            dragging.clearBlocked();
+            if (position.equals(dragging.getPosition())) {
+                dragging.clearBlocked();
+            }
             if (dragging.moveIsValid(position))
                 dragging.setPosition(position);
                 board.update(dragging);

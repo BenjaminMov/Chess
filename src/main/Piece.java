@@ -68,4 +68,8 @@ public abstract class Piece {
     public void clearBlocked() {
         piecesInPath.clear();
     }
+
+    public List<Integer> getPiecesInPath() {
+        return piecesInPath;
+    }
 }

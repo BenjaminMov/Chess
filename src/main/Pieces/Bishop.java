@@ -8,96 +8,76 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.abs;
 import static main.Board.BOARD_SIZE;
 
 public class Bishop extends Piece {
-
-    private List<Integer> piecesInPath = new ArrayList<>();
 
     public Bishop(Integer position, Board board, Boolean black) {
         super(position, board, "bishop", black);
     }
 
     @Override
-    public boolean moveIsValid(Integer position) {
-        boolean valid = false;
-
-        Integer xPos = position % BOARD_SIZE;
-        Integer yPos = position / BOARD_SIZE;
-
-        List<Integer> allPossibleMoves = new ArrayList<>();
-
-        boolean onRightDiag = (this.yPos - yPos) / (this.xPos - xPos) == 1;
-        boolean onLeftDiag = (this.yPos - yPos) / (this.xPos - xPos) == -1;
-
+    public void scan() {
         for (int pos = 0; pos < BOARD_SIZE * BOARD_SIZE; pos++) {
-            if ((this.position != pos) && (onLeftDiag || onRightDiag)) {
-                allPossibleMoves.add(pos);
-                if (board.existPieceAt(pos)) {
-                    piecesInPath.add(pos);
+
+            int xPos = (pos % BOARD_SIZE);
+            int yPos = (pos / BOARD_SIZE);
+
+            if (board.existPieceAt(pos)
+                    && ((this.xPos - xPos) != 0)
+                    && (abs(this.yPos - yPos) == abs(this.xPos - xPos))) {
+                piecesInPath.add(pos);
+            }
+        }
+    }
+
+    @Override
+    public boolean moveIsValid(Integer position) {
+
+        int xPos = (position % BOARD_SIZE);
+        int yPos = (position / BOARD_SIZE);
+
+        ArrayList<Integer> blocked = new ArrayList<>();
+
+        if (piecesInPath.contains(position) && board.getPieceAt(position).isBlack() == black) {
+            return false;
+        }
+
+        ArrayList<Integer> newBlocked = generateBlocked(blocked);
+
+        if (((this.xPos != xPos) && (abs(this.yPos - yPos) == abs(this.xPos - xPos))
+                && !newBlocked.contains(position))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private ArrayList<Integer> generateBlocked(ArrayList<Integer> blocked) {
+
+        for (int p : piecesInPath) {
+            int xPos = (p % BOARD_SIZE);
+            int yPos = (p / BOARD_SIZE);
+
+            if (xPos > this.xPos && yPos < this.yPos) {
+                for (int i = 1; i < BOARD_SIZE - xPos; i++) {
+                    blocked.add(p - (i * BOARD_SIZE) + i);
+                }
+            } else if (xPos < this.xPos && yPos < this.yPos) {
+                for (int i = 1; i < xPos + 1; i++) {
+                    blocked.add(p - (i * BOARD_SIZE) - i);
+                }
+            } else if (xPos < this.xPos && yPos > this.yPos) {
+                for (int i = 1; i < xPos + 1; i++) {
+                    blocked.add(p + (i * BOARD_SIZE) - i);
+                }
+            } else if (xPos > this.xPos && yPos > this.yPos) {
+                for (int i = 1; i < BOARD_SIZE - xPos; i++) {
+                    blocked.add(p + (i * BOARD_SIZE) + i);
                 }
             }
         }
-
-        for (int piece : piecesInPath) {
-            int quad = getQuadrant(piece);
-
-            switch (quad) {
-                case 1:
-                    for (int i = 0; i < BOARD_SIZE; i++) {
-                        allPossibleMoves.removeIf(p -> p.equals(piece - BOARD_SIZE + 1));
-                    }
-                    break;
-                case 2:
-                    for (int i = 0; i < BOARD_SIZE; i++) {
-                        allPossibleMoves.removeIf(p -> p.equals(piece - BOARD_SIZE - 1));
-                    }
-                    break;
-                case 3:
-                    for (int i = 0; i < BOARD_SIZE; i++) {
-                        allPossibleMoves.removeIf(p -> p.equals(piece + BOARD_SIZE - 1));
-                    }
-                    break;
-                case 4:
-                    for (int i = 0; i < BOARD_SIZE; i++) {
-                        allPossibleMoves.removeIf(p -> p.equals(piece + BOARD_SIZE + 1));
-                    }
-                    break;
-            }
-        }
-
-        List<Integer> validMoves = allPossibleMoves.stream().filter(this::valid).collect(Collectors.toList());
-
-        return validMoves.contains(position);
+        return blocked;
     }
-
-    private boolean valid(Integer move) {
-        if (board.existPieceAt(move)) {
-            return (black != board.getPieceAt(move).isBlack());
-        } else {
-            return true;
-        }
-    }
-
-
-    private int getQuadrant(Integer next) {
-        int quadrant = 0;
-        Integer xPos = next % BOARD_SIZE;
-        Integer yPos = next / BOARD_SIZE;
-
-        if (xPos > this.xPos && yPos > this.yPos) {
-            quadrant = 1;
-        } else if (xPos < this.xPos && yPos > this.yPos) {
-            quadrant = 2;
-        } else if (xPos < this.xPos && yPos < this.yPos) {
-            quadrant = 3;
-        } else if (xPos > this.xPos && yPos < this.yPos) {
-            quadrant = 4;
-        }
-
-        return quadrant;
-    }
-
-
-
 }
