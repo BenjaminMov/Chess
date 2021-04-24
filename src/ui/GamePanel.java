@@ -1,6 +1,7 @@
 package ui;
 
 import main.Board;
+import main.ChessGame;
 import main.Piece;
 
 import javax.swing.*;
@@ -19,17 +20,19 @@ public class GamePanel extends JPanel {
     private static final Color WHITE_TILE_COLOUR = new Color(255,245,196);
     private static final Color BLACK_TILE_COLOUR = new Color(101, 67, 33);
 
-    private static final Integer CIRCLE_SHADOW_DIAMETER = 40;
+    private static final Integer CIRCLE_SHADOW_DIAMETER = (int)(CELL_SIZE / 2.5);
     private static final Integer CIRCLE_SHADOW_OPACITY = 100;
 
     private Board board;
+    private ChessGame chessGame;
     private Piece dragging;
 
     private Integer mouseX;
     private Integer mouseY;
 
-    public GamePanel(Board board) {
-        this.board = board;
+    public GamePanel(ChessGame chessGame) {
+        this.chessGame = chessGame;
+        this.board = chessGame.getBoard();
 
         setPreferredSize(new Dimension(CELL_SIZE * BOARD_SIZE, CELL_SIZE * BOARD_SIZE));
         setOpaque(false);
@@ -49,7 +52,7 @@ public class GamePanel extends JPanel {
 
         makeColours(g);
 
-        for (Piece p : board) {
+        for (Piece p : chessGame.getBoard()) {
             drawPiece(g, p);
         }
 
@@ -155,7 +158,7 @@ public class GamePanel extends JPanel {
 
     private void handleMousePressed(MouseEvent me) {
         Integer position = (translateY(me.getY()) * BOARD_SIZE) + translateX(me.getX());
-        Piece myPiece = board.getPieceAt(position);
+        Piece myPiece = chessGame.getBoard().getPieceAt(position);
 
         mouseX = me.getX();
         mouseY = me.getY();
@@ -174,14 +177,7 @@ public class GamePanel extends JPanel {
 
     private void handleMouseReleased(MouseEvent me) {
         Integer position = (translateY(me.getY()) * BOARD_SIZE) + translateX(me.getX());
-        if (dragging != null) {
-            if (position.equals(dragging.getPosition())) {
-                dragging.clearBlocked();
-            }
-            if (dragging.moveIsValid(position))
-                dragging.setPosition(position);
-                board.update(dragging);
-        }
+        chessGame.movePiece(dragging, position);
         dragging = null;
     }
 

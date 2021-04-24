@@ -1,21 +1,22 @@
 package ui;
 
 import main.Board;
+import main.ChessGame;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ChessUI extends JFrame {
 
-    Board board;
+    private ChessGame chessGame;
     GamePanel gp;
 
     public ChessUI() {
         super("Chess");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(true);
-        board = new Board();
-        gp = new GamePanel(board);
+        chessGame = new ChessGame();
+        gp = new GamePanel(chessGame);
 
         add(gp);
 

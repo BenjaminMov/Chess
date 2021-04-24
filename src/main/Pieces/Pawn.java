@@ -5,8 +5,12 @@ import main.Piece;
 
 public class Pawn extends Piece {
 
+    private boolean firstMove = true;
+    private Integer initPos;
+
     public Pawn(Integer position, Board board, Boolean black) {
         super(position, board, "pawn", black);
+        initPos = position;
     }
 
     @Override
@@ -16,10 +20,20 @@ public class Pawn extends Piece {
 
     private boolean canMoveForward(Integer position) {
         boolean blackForward = black
-                && position.equals(this.position - Board.BOARD_SIZE) && noPieceAt(this.position - Board.BOARD_SIZE);
+                && validPosition(position) && noPieceAt(this.position - Board.BOARD_SIZE);
         boolean whiteForward = !black
-                && position.equals(this.position + Board.BOARD_SIZE) && noPieceAt(this.position + Board.BOARD_SIZE);
+                && validPosition(position) && noPieceAt(this.position + Board.BOARD_SIZE);
         return blackForward || whiteForward;
+    }
+
+    private boolean validPosition(Integer position) {
+        if (black) {
+            return  (position.equals(this.position - Board.BOARD_SIZE)
+                    || (firstMove && position.equals(this.position - Board.BOARD_SIZE * 2)));
+        } else {
+            return (position.equals(this.position + Board.BOARD_SIZE)
+                    || (firstMove && position.equals(this.position + Board.BOARD_SIZE * 2)));
+        }
     }
 
     private boolean canCapture(Integer position) {
@@ -41,6 +55,13 @@ public class Pawn extends Piece {
             return position.equals(this.position + Board.BOARD_SIZE + 1)
                     || position.equals(this.position + Board.BOARD_SIZE - 1)
                     && (position / Board.BOARD_SIZE == this.yPos + 1);
+        }
+    }
+
+    @Override
+    public void doneFirstMove() {
+        if (!position.equals(initPos)) {
+            firstMove = false;
         }
     }
 }

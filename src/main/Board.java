@@ -18,6 +18,18 @@ public class Board implements Iterable<Piece> {
         setup();
     }
 
+    public void movePiece(Piece piece, Integer position) {
+        if (piece != null) {
+            if (position.equals(piece.getPosition())) {
+                piece.clearBlocked();
+            }
+            if (piece.moveIsValid(position)) {
+                piece.setPosition(position);
+            }
+            update(piece);
+        }
+    }
+
     public void update(Piece movedPiece) {
         Piece capturedPiece = null;
         for (Piece p : pieces) {
@@ -28,6 +40,8 @@ public class Board implements Iterable<Piece> {
             p.setyPos(p.getPosition() / BOARD_SIZE);
             p.clearBlocked();
         }
+
+        movedPiece.doneFirstMove();
 
         if (capturedPiece != null) {
             Piece finalCapturedPiece = capturedPiece;

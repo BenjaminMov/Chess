@@ -72,4 +72,8 @@ public abstract class Piece {
     public List<Integer> getPiecesInPath() {
         return piecesInPath;
     }
+
+    public void doneFirstMove() {
+
+    }
 }
